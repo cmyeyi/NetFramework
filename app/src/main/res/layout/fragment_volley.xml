@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="@color/coral"
+        android:gravity="center"
+        android:text="使用volley进行网络请求" />
+
+
+    <Button
+        android:id="@+id/id_http_string_request_button"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_marginBottom="15dp"
+        android:text="StringRequest" />
+
+    <Button
+        android:id="@+id/id_http_json_request_button"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_marginBottom="15dp"
+        android:text="JsonRequest" />
+
+    <Button
+        android:id="@+id/id_http_image_request_button"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_marginBottom="15dp"
+        android:text="mageRequest" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/id_result_volley_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="15dp"
+            android:gravity="center"
+            android:scrollbars="vertical" />
+
+        <ImageView
+            android:id="@+id/id_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minHeight="200dp"
+            android:layout_alignParentBottom="true"/>
+
+        <com.android.volley.toolbox.NetworkImageView
+            android:id="@+id/id_network_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true">
+
+        </com.android.volley.toolbox.NetworkImageView>
+    </RelativeLayout>
+</LinearLayout>
