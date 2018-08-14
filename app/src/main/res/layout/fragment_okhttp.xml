@@ -24,6 +24,30 @@
         android:layout_marginBottom="15dp"
         android:text="okhttp post"/>
 
+    <Button
+        android:id="@+id/id_http_post_json_button"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_marginBottom="15dp"
+        android:text="okhttp post json"/>
+
+
+    <Button
+        android:id="@+id/id_http_get_synchronized_button"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_marginBottom="15dp"
+        android:text="同步 get"/>
+
+    <Button
+        android:id="@+id/id_http_post_synchronized_button"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_marginBottom="15dp"
+        android:text="同步 post"/>
+
+
+
     <TextView
         android:id="@+id/id_result_okhttp_view"
         android:layout_width="match_parent"
