@@ -1,4 +1,4 @@
-package hq.demo.net;
+package hq.demo.net.model;
 
 
 public class Result {

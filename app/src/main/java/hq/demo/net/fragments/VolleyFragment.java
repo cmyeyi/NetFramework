@@ -13,7 +13,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -51,9 +50,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import hq.demo.net.R;
-import hq.demo.net.Result;
+import hq.demo.net.model.Result;
 import hq.demo.net.UrlConnectionMananger;
-import hq.demo.net.WeatherList;
+import hq.demo.net.model.WeatherList;
 
 
 public class VolleyFragment extends Fragment {
