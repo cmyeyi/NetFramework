@@ -1,58 +1,115 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:background="@color/beige"
+    android:scrollbarStyle="insideOverlay">
 
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="使用okhttp进行网络请求"
-        android:gravity="center"/>
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-    <Button
-        android:id="@+id/id_http_get_button"
-        android:layout_width="match_parent"
-        android:layout_height="45dp"
-        android:layout_marginBottom="15dp"
-        android:text="okhttp get"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="使用okhttp进行网络请求" />
 
-    <Button
-        android:id="@+id/id_http_post_button"
-        android:layout_width="match_parent"
-        android:layout_height="45dp"
-        android:layout_marginBottom="15dp"
-        android:text="okhttp post"/>
+        <Button
+            android:id="@+id/id_http_get_button"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_marginBottom="15dp"
+            android:text="异步 get 请求" />
 
-    <Button
-        android:id="@+id/id_http_post_json_button"
-        android:layout_width="match_parent"
-        android:layout_height="45dp"
-        android:layout_marginBottom="15dp"
-        android:text="okhttp post json"/>
+        <Button
+            android:id="@+id/id_http_post_button"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_marginBottom="15dp"
+            android:text="异步 post 请求" />
+
+        <Button
+            android:id="@+id/id_http_post_json_button"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_marginBottom="15dp"
+            android:text="异步 post（json）请求" />
+
+        <Button
+            android:id="@+id/id_http_post_upload_button"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_marginBottom="15dp"
+            android:text="异步上传文件"/>
+
+        <Button
+            android:id="@+id/id_http_post_upload_multi_button"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_marginBottom="15dp"
+            android:text="异步上传multi文件"/>
+
+        <Button
+            android:id="@+id/id_http_post_download_button"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_marginBottom="15dp"
+            android:text="异步下载文件"/>
 
 
-    <Button
-        android:id="@+id/id_http_get_synchronized_button"
-        android:layout_width="match_parent"
-        android:layout_height="45dp"
-        android:layout_marginBottom="15dp"
-        android:text="同步 get"/>
+        <Button
+            android:id="@+id/id_http_get_synchronized_button"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_marginBottom="15dp"
+            android:text="同步 get 请求" />
 
-    <Button
-        android:id="@+id/id_http_post_synchronized_button"
-        android:layout_width="match_parent"
-        android:layout_height="45dp"
-        android:layout_marginBottom="15dp"
-        android:text="同步 post"/>
+        <Button
+            android:id="@+id/id_http_post_synchronized_button"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_marginBottom="15dp"
+            android:text="同步 post 请求" />
 
 
 
-    <TextView
-        android:id="@+id/id_result_okhttp_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="15dp"
-        android:scrollbars="vertical"
-        android:gravity="center" />
-</LinearLayout>
+        <TextView
+            android:id="@+id/id_result_okhttp_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="15dp"
+            android:gravity="center"/>
+
+        <ImageView
+            android:id="@+id/id_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"/>
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_marginBottom="15dp"
+            android:text="bottom" />
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_marginBottom="15dp"
+            android:text="bottom" />
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_marginBottom="15dp"
+            android:text="bottom" />
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_marginBottom="15dp"
+            android:text="bottom" />
+    </LinearLayout>
+</ScrollView>

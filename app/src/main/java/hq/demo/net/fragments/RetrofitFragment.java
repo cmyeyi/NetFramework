@@ -27,4 +27,7 @@ public class RetrofitFragment extends Fragment {
         });
         return view;
     }
+
+    
+
 }
