@@ -51,8 +51,7 @@ public class NewOkHttpFragment extends Fragment implements View.OnClickListener 
      */
     private void testOkhttpGet() {
         String url = "http://api.k780.com/?app=weather.history";
-        OKHttpManager okHttpManager = OKHttpManager.getInstance();
-        okHttpManager.doGet(url, new ResponseCallBack() {
+        OKHttpManager.getInstance().doGet(url, new ResponseCallBack() {
             @Override
             public void onFailure(Throwable e) {
                 showResult(e.getMessage());
@@ -85,8 +84,7 @@ public class NewOkHttpFragment extends Fragment implements View.OnClickListener 
                 .build();
 
 
-        OKHttpManager okHttpManager = OKHttpManager.getInstance();
-        okHttpManager.doPost(url, body, new ResponseCallBack() {
+        OKHttpManager.getInstance().doPost(url, body, new ResponseCallBack() {
             @Override
             public void onFailure(Throwable e) {
                 showResult(e.getMessage());
@@ -105,14 +103,20 @@ public class NewOkHttpFragment extends Fragment implements View.OnClickListener 
     }
 
 
-    private void showResult(String content) {
-        if (resultView != null) {
-            if (TextUtils.isEmpty(content)) {
-                resultView.setText("null");
-            } else {
-                resultView.setText(content);
+    private void showResult(final String content) {
+        OKHttpManager.getInstance().runOnUIThread(new Runnable() {
+            @Override
+            public void run() {
+                if (resultView != null) {
+                    if (TextUtils.isEmpty(content)) {
+                        resultView.setText("null");
+                    } else {
+                        resultView.setText(content);
+                    }
+                }
             }
-        }
+        });
+
     }
 
     @Override

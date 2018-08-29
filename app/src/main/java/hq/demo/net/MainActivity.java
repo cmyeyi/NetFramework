@@ -61,7 +61,8 @@ public class MainActivity extends AppCompatActivity {
         listFragment = new ArrayList<>();
         listFragment.add(new VolleyFragment());
         listFragment.add(new OkHttpFragment());
-        listFragment.add(new NewOkHttpFragment());
+//        listFragment.add(new NewOkHttpFragment());//打开注释，测试简单封装
+        listFragment.add(new RetrofitFragment());
         ViewPagerFragAdapter myAdapter = new ViewPagerFragAdapter(getSupportFragmentManager(), this, listFragment);
         viewPager.setAdapter(myAdapter);
 

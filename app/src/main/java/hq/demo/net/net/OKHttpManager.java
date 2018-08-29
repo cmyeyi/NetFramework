@@ -3,6 +3,7 @@ package hq.demo.net.net;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
@@ -22,12 +23,9 @@ public class OKHttpManager {
 
     public static final String TAG = "OKHttpManager";
     public static final long DEFAULT_TIMEOUT = 60; //默认的超时时间,单位：秒
-    private Context context;
     private Handler mHandler;
     private OkHttpClient okHttpClient;
 
-    public static final int ERROR = -1000;
-    public static final int SUCCESS = 1000;
     private static volatile OKHttpManager mInstance;//注意这里的使用volatile修饰变量，
     private ResponseCallBack callBack;
 
@@ -35,18 +33,6 @@ public class OKHttpManager {
         mHandler = new Handler(Looper.getMainLooper());
         okHttpClient = settings();
     }
-
-//    public static OKHttpManager getInstance() {
-//        if (mInstance == null) {
-//            synchronized (OKHttpManager.class) {
-//                if (mInstance == null) {
-//                    mInstance = new OKHttpManager();
-//                }
-//            }
-//
-//        }
-//        return mInstance;
-//    }
 
     /**
      * 使用静态内部类的机制，构造单例
@@ -63,7 +49,7 @@ public class OKHttpManager {
 
 
     /**
-     * 设置超时和缓存
+     * 设置超时
      */
     private OkHttpClient settings() {
         OkHttpClient.Builder builder = new OkHttpClient.Builder();
@@ -99,37 +85,26 @@ public class OKHttpManager {
 
             @Override
             public void onFailure(Call call, final IOException e) {
-                handleFailure(e);
+                callBack.onFailure(e);
             }
 
             @Override
             public void onResponse(Call call, final Response response) throws IOException {
                 //注意这里的string()方法只能被调用一次，否者后面会报错，因为流已经被关闭，所以这里注释掉日志
 //                Log.d(TAG,response.body().string());
-                handleSuccess(response);
-            }
-        });
-
-    }
-
-    public void handleFailure(final Throwable e) {
-        mHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                callBack.onFailure(e);
-            }
-        });
-    }
-
-    public void handleSuccess(final Response response) {
-        mHandler.post(new Runnable() {
-            @Override
-            public void run() {
                 callBack.onSuccess(response);
             }
         });
+
     }
 
+    public Handler getHandler() {
+        return mHandler;
+    }
+
+    public void runOnUIThread(Runnable runnable) {
+        mHandler.post(runnable);
+    }
 
     public void cancelWithTag(OkHttpClient client, Object tag) {
         if (client == null || tag == null) return;

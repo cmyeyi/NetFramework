@@ -3,6 +3,7 @@ package hq.demo.net.fragments;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -24,6 +25,7 @@ import java.io.InputStream;
 
 import hq.demo.net.PermissionManager;
 import hq.demo.net.R;
+import hq.demo.net.net.OKHttpManager;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.FormBody;
@@ -79,28 +81,22 @@ public class OkHttpFragment extends Fragment implements View.OnClickListener {
         postSynchronizedView.setOnClickListener(this);
     }
 
-    private Handler mHandler = new Handler() {
-        public void handleMessage(Message msg) {
-            switch (msg.what) {
-                case 0:
-                    if (msg.obj == null) {
+    private void showResult(final String content) {
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+                if (resultView != null) {
+                    if (TextUtils.isEmpty(content)) {
                         resultView.setText("null");
                     } else {
-                        resultView.setText("error:" + msg.obj.toString());
+                        resultView.setText(content);
                     }
-                    break;
-                case 1:
-                    if (msg.obj == null) {
-                        resultView.setText("null");
-                    } else {
-                        resultView.setText("response:" + msg.obj.toString());
-                    }
-                    break;
-
+                }
             }
-        }
-    };
+        });
 
+
+    }
 
     /**
      * 测试okhttp的get方法
@@ -113,20 +109,12 @@ public class OkHttpFragment extends Fragment implements View.OnClickListener {
         call.enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                Message message = Message.obtain();
-                message.what = 0;
-                message.obj = e.getMessage();
-                mHandler.sendMessage(message);
-                Log.d(TAG, "onFailure: " + message.obj.toString());
+                showResult(e.getMessage());
             }
 
             @Override
             public void onResponse(Call call, okhttp3.Response response) throws IOException {
-                Message message = Message.obtain();
-                message.what = 1;
-                message.obj = response.body().string();//string不能调用两次 被调用一次就关闭了，这里调用两次会报异常
-                mHandler.sendMessage(message);
-                Log.d(TAG, "response: " + message.obj.toString());
+                showResult(response.body().string());
             }
         });
 
@@ -158,20 +146,12 @@ public class OkHttpFragment extends Fragment implements View.OnClickListener {
         call.enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                Message message = Message.obtain();
-                message.what = 0;
-                message.obj = e.getMessage();
-                mHandler.sendMessage(message);
-                Log.d(TAG, "response: " + message.obj.toString());
+                showResult(e.getMessage());
             }
 
             @Override
             public void onResponse(Call call, okhttp3.Response response) throws IOException {
-                Message message = Message.obtain();
-                message.what = 1;
-                message.obj = response.body().string();//string不能调用两次 被调用一次就关闭了，这里调用两次会报异常
-                mHandler.sendMessage(message);
-                Log.d(TAG, "response: " + message.obj.toString());
+                showResult(response.body().string());
             }
         });
 
@@ -194,20 +174,12 @@ public class OkHttpFragment extends Fragment implements View.OnClickListener {
         call.enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                Message message = Message.obtain();
-                message.what = 0;
-                message.obj = e.getMessage();
-                mHandler.sendMessage(message);
-                Log.d(TAG, "response: " + message.obj.toString());
+                showResult(e.getMessage());
             }
 
             @Override
             public void onResponse(Call call, okhttp3.Response response) throws IOException {
-                Message message = Message.obtain();
-                message.what = 1;
-                message.obj = response.body().string();//string不能调用两次 被调用一次就关闭了，这里调用两次会报异常
-                mHandler.sendMessage(message);
-                Log.d(TAG, "response: " + message.obj.toString());
+                showResult(response.body().string());
             }
         });
     }
@@ -453,23 +425,13 @@ public class OkHttpFragment extends Fragment implements View.OnClickListener {
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        Message message = Message.obtain();
+                        String result = "";
                         try {
-                            String result = testOkhttpGetSynchronized();
-                            if (!TextUtils.isEmpty(result)) {
-                                message.what = 1;
-                                message.obj = result;
-                            } else {
-                                message.what = 0;
-                                message.obj = null;
-                            }
-
+                            result = testOkhttpGetSynchronized();
                         } catch (IOException e) {
-                            message.what = 0;
-                            message.obj = null;
                             e.printStackTrace();
                         } finally {
-                            mHandler.sendMessage(message);
+                            showResult(result);
                         }
                     }
                 }).start();
@@ -479,23 +441,13 @@ public class OkHttpFragment extends Fragment implements View.OnClickListener {
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        Message message = Message.obtain();
+                        String result = "";
                         try {
-                            String result = testOkhttpPostSynchronized();
-                            if (!TextUtils.isEmpty(result)) {
-                                message.what = 1;
-                                message.obj = result;
-                            } else {
-                                message.what = 0;
-                                message.obj = null;
-                            }
-
+                            result = testOkhttpPostSynchronized();
                         } catch (IOException e) {
-                            message.what = 0;
-                            message.obj = null;
                             e.printStackTrace();
                         } finally {
-                            mHandler.sendMessage(message);
+                            showResult(result);
                         }
                     }
                 }).start();
