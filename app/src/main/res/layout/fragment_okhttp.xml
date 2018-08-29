@@ -37,6 +37,14 @@
             android:layout_marginBottom="15dp"
             android:text="异步 post（json）请求" />
 
+
+        <Button
+            android:id="@+id/id_http_post_download_button"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_marginBottom="15dp"
+            android:text="异步下载文件"/>
+
         <Button
             android:id="@+id/id_http_post_upload_button"
             android:layout_width="match_parent"
@@ -50,14 +58,6 @@
             android:layout_height="45dp"
             android:layout_marginBottom="15dp"
             android:text="异步上传multi文件"/>
-
-        <Button
-            android:id="@+id/id_http_post_download_button"
-            android:layout_width="match_parent"
-            android:layout_height="45dp"
-            android:layout_marginBottom="15dp"
-            android:text="异步下载文件"/>
-
 
         <Button
             android:id="@+id/id_http_get_synchronized_button"

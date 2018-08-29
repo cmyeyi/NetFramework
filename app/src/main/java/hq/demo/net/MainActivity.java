@@ -11,6 +11,7 @@ import android.view.MenuItem;
 import java.util.ArrayList;
 import java.util.List;
 
+import hq.demo.net.fragments.NewOkHttpFragment;
 import hq.demo.net.fragments.OkHttpFragment;
 import hq.demo.net.fragments.RetrofitFragment;
 import hq.demo.net.fragments.ViewPagerFragAdapter;
@@ -60,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
         listFragment = new ArrayList<>();
         listFragment.add(new VolleyFragment());
         listFragment.add(new OkHttpFragment());
-        listFragment.add(new RetrofitFragment());
+        listFragment.add(new NewOkHttpFragment());
         ViewPagerFragAdapter myAdapter = new ViewPagerFragAdapter(getSupportFragmentManager(), this, listFragment);
         viewPager.setAdapter(myAdapter);
 

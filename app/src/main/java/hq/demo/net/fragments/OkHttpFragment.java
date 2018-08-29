@@ -14,7 +14,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.tech.aile.permission.Permission;
 
@@ -29,6 +28,7 @@ import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.FormBody;
 import okhttp3.MediaType;
+import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
@@ -47,6 +47,7 @@ public class OkHttpFragment extends Fragment implements View.OnClickListener {
     private Button uploadView;
     private Button downloadView;
     private ImageView mImageView;
+    private Button multiUploadView;
 
     @Nullable
     @Override
@@ -55,8 +56,9 @@ public class OkHttpFragment extends Fragment implements View.OnClickListener {
         getView = (Button) view.findViewById(R.id.id_http_get_button);
         postView = (Button) view.findViewById(R.id.id_http_post_button);
         postJsonView = (Button) view.findViewById(R.id.id_http_post_json_button);
-        uploadView = (Button) view.findViewById(R.id.id_http_post_upload_button);
         downloadView = (Button) view.findViewById(R.id.id_http_post_download_button);
+        uploadView = (Button) view.findViewById(R.id.id_http_post_upload_button);
+        multiUploadView = (Button) view.findViewById(R.id.id_http_post_upload_multi_button);
         getSynchronizedView = (Button) view.findViewById(R.id.id_http_get_synchronized_button);
         postSynchronizedView = (Button) view.findViewById(R.id.id_http_post_synchronized_button);
 
@@ -70,37 +72,34 @@ public class OkHttpFragment extends Fragment implements View.OnClickListener {
         getView.setOnClickListener(this);
         postView.setOnClickListener(this);
         postJsonView.setOnClickListener(this);
-        uploadView.setOnClickListener(this);
         downloadView.setOnClickListener(this);
+        uploadView.setOnClickListener(this);
+        multiUploadView.setOnClickListener(this);
         getSynchronizedView.setOnClickListener(this);
         postSynchronizedView.setOnClickListener(this);
     }
 
-    private Handler mHandler;
+    private Handler mHandler = new Handler() {
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case 0:
+                    if (msg.obj == null) {
+                        resultView.setText("null");
+                    } else {
+                        resultView.setText("error:" + msg.obj.toString());
+                    }
+                    break;
+                case 1:
+                    if (msg.obj == null) {
+                        resultView.setText("null");
+                    } else {
+                        resultView.setText("response:" + msg.obj.toString());
+                    }
+                    break;
 
-    {
-        mHandler = new Handler() {
-            public void handleMessage(Message msg) {
-                switch (msg.what) {
-                    case 0:
-                        if (msg.obj == null) {
-                            resultView.setText("null");
-                        } else {
-                            resultView.setText("error:" + msg.obj.toString());
-                        }
-                        break;
-                    case 1:
-                        if (msg.obj == null) {
-                            resultView.setText("null");
-                        } else {
-                            resultView.setText("response:" + msg.obj.toString());
-                        }
-                        break;
-
-                }
             }
-        };
-    }
+        }
+    };
 
 
     /**
@@ -110,7 +109,7 @@ public class OkHttpFragment extends Fragment implements View.OnClickListener {
         String url = "http://api.k780.com/?app=weather.history";
         OkHttpClient okHttpClient = new OkHttpClient();
         okhttp3.Request request = new okhttp3.Request.Builder().url(url).get().build();//.get()可以不要，Builder的默认构造方法里面就是get请求
-        final Call call = okHttpClient.newCall(request);
+        Call call = okHttpClient.newCall(request);
         call.enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
@@ -261,83 +260,6 @@ public class OkHttpFragment extends Fragment implements View.OnClickListener {
 
     }
 
-
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.id_http_get_button:
-                testOkhttpGet();
-                break;
-            case R.id.id_http_post_button:
-                testOkhttpPost();
-                break;
-            case R.id.id_http_post_json_button:
-                testOkhttpPostJson();
-                break;
-            case R.id.id_http_post_upload_button:
-                uploadImage();
-                //TODO
-                break;
-            case R.id.id_http_post_download_button:
-                download();
-                //TODO
-                break;
-            case R.id.id_http_get_synchronized_button:
-
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Message message = Message.obtain();
-                        try {
-                            String result = testOkhttpGetSynchronized();
-                            if (!TextUtils.isEmpty(result)) {
-                                message.what = 1;
-                                message.obj = result;
-                            } else {
-                                message.what = 0;
-                                message.obj = null;
-                            }
-
-                        } catch (IOException e) {
-                            message.what = 0;
-                            message.obj = null;
-                            e.printStackTrace();
-                        } finally {
-                            mHandler.sendMessage(message);
-                        }
-                    }
-                }).start();
-
-                break;
-            case R.id.id_http_post_synchronized_button:
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Message message = Message.obtain();
-                        try {
-                            String result = testOkhttpPostSynchronized();
-                            if (!TextUtils.isEmpty(result)) {
-                                message.what = 1;
-                                message.obj = result;
-                            } else {
-                                message.what = 0;
-                                message.obj = null;
-                            }
-
-                        } catch (IOException e) {
-                            message.what = 0;
-                            message.obj = null;
-                            e.printStackTrace();
-                        } finally {
-                            mHandler.sendMessage(message);
-                        }
-                    }
-                }).start();
-
-                break;
-        }
-    }
-
     private void download() {
         if (!PermissionManager.isHasPermission(getActivity(), Permission.Group.STORAGE)) {
             PermissionManager.requestPermission(getActivity(), Permission.Group.STORAGE);
@@ -421,19 +343,19 @@ public class OkHttpFragment extends Fragment implements View.OnClickListener {
         call.enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                Log.e(TAG,"failure:" + e.getLocalizedMessage());
-                Log.d(TAG,"#upload over#");
+                Log.e(TAG, "failure:" + e.getLocalizedMessage());
+                Log.d(TAG, "#upload over#");
             }
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
-                Log.d(TAG,"response message|" + response.message());
-                if(response.isSuccessful()){
-                    Log.d(TAG,"upload success,response|" + response.body().string());
+                Log.d(TAG, "response message|" + response.message());
+                if (response.isSuccessful()) {
+                    Log.d(TAG, "upload success,response|" + response.body().string());
                 } else {
-                    Log.d(TAG,"upload failure,response|" + response.message());
+                    Log.d(TAG, "upload failure,response|" + response.message());
                 }
-                Log.d(TAG,"#upload over#");
+                Log.d(TAG, "#upload over#");
             }
         });
 
@@ -451,4 +373,135 @@ public class OkHttpFragment extends Fragment implements View.OnClickListener {
 
         upload(imagePath, imageName);
     }
+
+
+    private void uploadMultiFile(String parent, String child) {
+        Log.d(TAG, "#begin upload multi#");
+        File file = new File(parent, child);
+
+        RequestBody requestBody = new MultipartBody.Builder()
+                .setType(MultipartBody.FORM)
+                .addFormDataPart("title", "good image")
+                .addFormDataPart("image", child, RequestBody.create(MEDIA_TYPE_IMAGE, file))
+                .build();
+
+        Request request = new Request.Builder()
+                .url(UPLOAD_URL)
+                .post(requestBody)
+                .build();
+
+        OkHttpClient okHttpClient = new OkHttpClient();
+        Call call = okHttpClient.newCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Log.e(TAG, "multi failure:" + e.getLocalizedMessage());
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                Log.d(TAG, "multi response message|" + response.message());
+                if (response.isSuccessful()) {
+                    Log.d(TAG, "upload multi success,response|" + response.body().string());
+                } else {
+                    Log.d(TAG, "upload multi failure,response|" + response.message());
+                }
+            }
+        });
+
+    }
+
+    private void doUploadMultiFile() {
+        String imageName = "abstract-free-photo-1570x1047.jpg";
+        String imagePath = DEFAULT_PATH;
+        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+            imagePath = Environment.getExternalStorageDirectory().getAbsolutePath();
+        } else {
+            return;
+        }
+
+        uploadMultiFile(imagePath, imageName);
+    }
+
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.id_http_get_button:
+                testOkhttpGet();
+                break;
+            case R.id.id_http_post_button:
+                testOkhttpPost();
+                break;
+            case R.id.id_http_post_json_button:
+                testOkhttpPostJson();
+                break;
+            case R.id.id_http_post_download_button:
+                download();
+                //TODO
+                break;
+            case R.id.id_http_post_upload_button:
+                uploadImage();
+                //TODO
+                break;
+            case R.id.id_http_post_upload_multi_button:
+                doUploadMultiFile();
+                //TODO
+                break;
+            case R.id.id_http_get_synchronized_button:
+
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Message message = Message.obtain();
+                        try {
+                            String result = testOkhttpGetSynchronized();
+                            if (!TextUtils.isEmpty(result)) {
+                                message.what = 1;
+                                message.obj = result;
+                            } else {
+                                message.what = 0;
+                                message.obj = null;
+                            }
+
+                        } catch (IOException e) {
+                            message.what = 0;
+                            message.obj = null;
+                            e.printStackTrace();
+                        } finally {
+                            mHandler.sendMessage(message);
+                        }
+                    }
+                }).start();
+
+                break;
+            case R.id.id_http_post_synchronized_button:
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Message message = Message.obtain();
+                        try {
+                            String result = testOkhttpPostSynchronized();
+                            if (!TextUtils.isEmpty(result)) {
+                                message.what = 1;
+                                message.obj = result;
+                            } else {
+                                message.what = 0;
+                                message.obj = null;
+                            }
+
+                        } catch (IOException e) {
+                            message.what = 0;
+                            message.obj = null;
+                            e.printStackTrace();
+                        } finally {
+                            mHandler.sendMessage(message);
+                        }
+                    }
+                }).start();
+
+                break;
+        }
+    }
+
 }
