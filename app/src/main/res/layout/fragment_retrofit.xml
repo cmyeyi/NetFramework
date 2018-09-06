@@ -1,36 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:background="@color/beige"
+    android:scrollbarStyle="insideOverlay">
 
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:text="使用retrofit进行网络请求"
-        android:gravity="center"
-        android:background="@color/coral"/>
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-    <Button
-        android:id="@+id/id_retrofit_get_button"
-        android:layout_width="match_parent"
-        android:layout_height="45dp"
-        android:layout_marginBottom="15dp"
-        android:text="retrofit get"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="retrofit进行网络请求" />
 
-    <Button
-        android:id="@+id/id_retrofit_post_button"
-        android:layout_width="match_parent"
-        android:layout_height="45dp"
-        android:layout_marginBottom="15dp"
-        android:text="retrofit get"/>
+        <Button
+            android:id="@+id/id_retrofit_get_button"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_marginBottom="15dp"
+            android:text="get 请求" />
+
+        <Button
+            android:id="@+id/id_retrofit_post_button"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_marginBottom="15dp"
+            android:text="post 请求" />
+
+        <TextView
+            android:id="@+id/id_result_retrofit_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="15dp"
+            android:gravity="center"/>
 
 
-    <TextView
-        android:id="@+id/id_result_retrofit_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="15dp"
-        android:scrollbars="vertical"
-        android:gravity="center" />
-</LinearLayout>
+    </LinearLayout>
+</ScrollView>
