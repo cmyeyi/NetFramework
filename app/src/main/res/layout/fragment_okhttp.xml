@@ -10,12 +10,6 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="使用okhttp进行网络请求" />
-
         <Button
             android:id="@+id/id_http_get_button"
             android:layout_width="match_parent"

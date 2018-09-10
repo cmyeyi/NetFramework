@@ -11,21 +11,21 @@
         android:orientation="vertical">
 
         <Button
-            android:id="@+id/id_http_get_button"
+            android:id="@+id/id_rx_get_button"
             android:layout_width="match_parent"
             android:layout_height="45dp"
             android:layout_marginBottom="15dp"
             android:text="异步 get 请求" />
 
         <Button
-            android:id="@+id/id_http_post_button"
+            android:id="@+id/id_rx_post_button"
             android:layout_width="match_parent"
             android:layout_height="45dp"
             android:layout_marginBottom="15dp"
             android:text="异步 post 请求" />
 
         <TextView
-            android:id="@+id/id_result_okhttp_view"
+            android:id="@+id/id_result_rx_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="15dp"

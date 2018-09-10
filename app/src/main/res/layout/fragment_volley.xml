@@ -4,14 +4,6 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:background="@color/coral"
-        android:gravity="center"
-        android:text="使用volley进行网络请求" />
-
-
     <Button
         android:id="@+id/id_http_string_request_button"
         android:layout_width="match_parent"

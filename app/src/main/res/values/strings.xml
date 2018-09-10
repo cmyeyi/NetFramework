@@ -3,4 +3,8 @@
     <string name="title_volley">Volley</string>
     <string name="title_okhttp">OKHttp</string>
     <string name="title_retrofit">Retrofit</string>
+    <string name="main_title_text_0">Volley</string>
+    <string name="main_title_text_1">OKHttp</string>
+    <string name="main_title_text_2">Retrofit</string>
+    <string name="main_title_text_3">RxJava</string>
 </resources>

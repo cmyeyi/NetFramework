@@ -5,12 +5,14 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import hq.demo.net.fragments.FragmentMain;
 import hq.demo.net.fragments.NewOkHttpFragment;
 import hq.demo.net.fragments.OkHttpFragment;
 import hq.demo.net.fragments.RetrofitFragment;
@@ -59,10 +61,10 @@ public class MainActivity extends AppCompatActivity {
 
         //向ViewPager添加各页面
         listFragment = new ArrayList<>();
+        listFragment.add(new FragmentMain());
         listFragment.add(new VolleyFragment());
         listFragment.add(new OkHttpFragment());
-//        listFragment.add(new NewOkHttpFragment());//打开注释，测试简单封装
-        listFragment.add(new RetrofitFragment());
+//        listFragment.add(new RetrofitFragment());
         ViewPagerFragAdapter myAdapter = new ViewPagerFragAdapter(getSupportFragmentManager(), this, listFragment);
         viewPager.setAdapter(myAdapter);
 
@@ -103,4 +105,16 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    public void setupBackAsUp(String title, boolean isHasBackIcon) {
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            //为标题栏设置标题，即给ActionBar设置标题。
+            actionBar.setTitle(title);
+            actionBar.setHomeAsUpIndicator(R.mipmap.arrow_back_white);
+            //ActionBar加一个返回图标
+            actionBar.setDisplayHomeAsUpEnabled(isHasBackIcon);
+            //不显示当前程序的图标。
+            actionBar.setDisplayShowHomeEnabled(false);
+        }
+    }
 }

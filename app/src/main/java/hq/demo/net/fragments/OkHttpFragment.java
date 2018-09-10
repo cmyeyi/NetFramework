@@ -35,6 +35,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+import okhttp3.ResponseBody;
 
 
 public class OkHttpFragment extends Fragment implements View.OnClickListener {
@@ -237,7 +238,7 @@ public class OkHttpFragment extends Fragment implements View.OnClickListener {
             PermissionManager.requestPermission(getActivity(), Permission.Group.STORAGE);
         }
 
-        String imageUrl = "https://picjumbo.com/wp-content/uploads/abstract-free-photo-1570x1047.jpg";
+        String imageUrl = "https://picjumbo.com/wp-content/uploads/manarola-at-night-free-photo-DSC04277-1080x720.jpg";
         Request request = new Request.Builder().url(imageUrl).build();
         OkHttpClient okHttpClient = new OkHttpClient();
         Call call = okHttpClient.newCall(request);
@@ -250,37 +251,70 @@ public class OkHttpFragment extends Fragment implements View.OnClickListener {
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 Log.e(TAG, response.message());
-                InputStream inputStream = response.body().byteStream();
-                FileOutputStream fileOutputStream = null;
-                String filePath = "";
+                writeResponseBodyToDisk(response.body(),"image201809070001.jpg");
 
-                try {
-                    if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-                        Log.d(TAG, "get file path#1#");
-                        filePath = Environment.getExternalStorageDirectory().getAbsolutePath();
-                    } else {
-                        filePath = getActivity().getFilesDir().getAbsolutePath();
-                        Log.d(TAG, "get file path#2#");
-                    }
-                    Log.d(TAG, "filepath = " + filePath);
-                    File file = new File(filePath, "abstract-free-photo-1570x1047.jpg");
-                    if (!file.exists()) {
-                        fileOutputStream = new FileOutputStream(file);
-                        byte[] buffer = new byte[1024];
-                        int length = 0;
-                        while ((length = inputStream.read(buffer)) != -1) {
-                            fileOutputStream.write(buffer, 0, length);
-                        }
-                        fileOutputStream.flush();
-                    }
-                } catch (IOException e) {
-                    Log.e(TAG, "IOException");
-                    e.printStackTrace();
-                }
+//                InputStream inputStream = response.body().byteStream();
+//                FileOutputStream fileOutputStream = null;
+//                String filePath = "";
+//
+//                if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+//                    Log.d(TAG, "get file path#1#");
+//                    filePath = Environment.getExternalStorageDirectory().getAbsolutePath();
+//                } else {
+//                    filePath = getActivity().getFilesDir().getAbsolutePath();
+//                    Log.d(TAG, "get file path#2#");
+//                }
+//                Log.d(TAG, "filepath = " + filePath);
+//                try {
+//                    File file = new File(filePath, "image201809070001.jpg");
+//                    if (!file.exists()) {
+//                        fileOutputStream = new FileOutputStream(file);
+//                        byte[] buffer = new byte[1024];
+//                        int length = 0;
+//                        while ((length = inputStream.read(buffer)) != -1) {
+//                            fileOutputStream.write(buffer, 0, length);
+//                        }
+//                        fileOutputStream.flush();
+//                    }
+//                } catch (IOException e) {
+//                    Log.e(TAG, "IOException");
+//                    e.printStackTrace();
+//                }
 
             }
         });
 
+    }
+
+    public boolean writeResponseBodyToDisk(ResponseBody body, String filePath) {
+        InputStream inputStream = body.byteStream();
+        FileOutputStream fileOutputStream = null;
+        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+            Log.d(TAG, "get file path#1#");
+            filePath = Environment.getExternalStorageDirectory().getAbsolutePath();
+        } else {
+            filePath = getActivity().getFilesDir().getAbsolutePath();
+            Log.d(TAG, "get file path#2#");
+        }
+        Log.d(TAG, "filepath = " + filePath);
+        try {
+            File file = new File(filePath, System.currentTimeMillis()+".jpg");
+            if (!file.exists()) {
+                fileOutputStream = new FileOutputStream(file);
+                byte[] buffer = new byte[1024];
+                int length = 0;
+                while ((length = inputStream.read(buffer)) != -1) {
+                    fileOutputStream.write(buffer, 0, length);
+                }
+                fileOutputStream.flush();
+                return true;
+            }
+        } catch (IOException e) {
+            Log.e(TAG, "IOException");
+            e.printStackTrace();
+            return false;
+        }
+        return false;
     }
 
     public final static MediaType MEDIA_TYPE_IMAGE = MediaType.parse("image/png");
