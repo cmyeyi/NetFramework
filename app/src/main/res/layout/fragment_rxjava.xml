@@ -22,7 +22,21 @@
             android:layout_width="match_parent"
             android:layout_height="45dp"
             android:layout_marginBottom="15dp"
-            android:text="异步 post 请求" />
+            android:text="do post" />
+
+        <Button
+            android:id="@+id/id_rx_from_button"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_marginBottom="15dp"
+            android:text="do from" />
+
+        <Button
+            android:id="@+id/id_rx_create_button"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_marginBottom="15dp"
+            android:text="do create" />
 
         <TextView
             android:id="@+id/id_result_rx_view"

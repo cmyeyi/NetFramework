@@ -1,12 +1,11 @@
 package hq.demo.net.net;
 
 
-import android.media.MediaRouter;
-
 import java.util.Map;
 
 import hq.demo.net.model.Movies;
 import hq.demo.net.model.WeatherBeans;
+import io.reactivex.Observable;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
@@ -17,7 +16,6 @@ import retrofit2.http.FieldMap;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.HTTP;
-import retrofit2.http.Header;
 import retrofit2.http.Headers;
 import retrofit2.http.Multipart;
 import retrofit2.http.OPTIONS;
@@ -160,5 +158,12 @@ public interface NetService {
     @Streaming
     Call<ResponseBody> downloadImage(@Url String url);
 
+
+
+    @GET("?app=weather.future&weaid=1&&appkey=10003&sign=b59bc3ef6191eb9f747dd4e83c99f2a4&format=json")
+    Observable<WeatherBeans> requestWeatherBeansRX();
+
+    @POST("/")
+    Observable<WeatherBeans> requestWeatherBeansRX(@Body RequestParams parama);
 
 }

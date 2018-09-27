@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:cpb="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -25,6 +26,20 @@
         android:layout_marginBottom="15dp"
         android:text="ImageRequest" />
 
+
+    <RelativeLayout
+        android:layout_width="240dp"
+        android:layout_height="240dp"
+        android:visibility="gone">
+        <hq.demo.net.view.CircleProgressBar
+            android:id="@+id/circle_pb"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/circle_progress_bar_bg"
+            cpb:progress_background="@color/circle_progress_bg_color"
+            cpb:radius="24dp" />
+    </RelativeLayout>
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -41,8 +56,8 @@
             android:id="@+id/id_image"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:minHeight="200dp"
-            android:layout_alignParentBottom="true"/>
+            android:layout_alignParentBottom="true"
+            android:minHeight="200dp" />
 
         <com.android.volley.toolbox.NetworkImageView
             android:id="@+id/id_network_image"

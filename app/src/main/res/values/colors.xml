@@ -152,4 +152,7 @@
     <color name="black">#000000</color> <!--黑色 -->
     <color name="transparent">#00000000</color>
     <color name="theme_color">#2191E7</color>
+    <color name="circle_progress_bg_color">#E665D1D7</color>
+    <color name="circle_progress_color">#E6FFFFFF</color>
+
 </resources>
