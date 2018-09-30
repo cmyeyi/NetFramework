@@ -9,13 +9,25 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.PopupWindow;
 import android.widget.TextView;
+
+import org.reactivestreams.Subscriber;
+import org.reactivestreams.Subscription;
 
 import java.util.concurrent.TimeUnit;
 
 import hq.demo.net.R;
 import hq.demo.net.model.WeatherBeans;
 import hq.demo.net.net.NetService;
+import io.reactivex.BackpressureStrategy;
+import io.reactivex.Completable;
+import io.reactivex.CompletableObserver;
+import io.reactivex.Flowable;
+import io.reactivex.FlowableEmitter;
+import io.reactivex.FlowableOnSubscribe;
+import io.reactivex.Maybe;
+import io.reactivex.MaybeObserver;
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
@@ -26,6 +38,8 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.internal.schedulers.SchedulerWhen;
 import io.reactivex.internal.schedulers.SingleScheduler;
+import io.reactivex.observers.DisposableCompletableObserver;
+import io.reactivex.observers.DisposableMaybeObserver;
 import io.reactivex.schedulers.Schedulers;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
@@ -40,6 +54,9 @@ public class RxJavaFragment extends Fragment implements View.OnClickListener {
     private Button postView;
     private Button fromView;
     private Button createView;
+    private Button flowableView;
+    private Button completableView;
+    private Button maybeView;
 
 
     @Nullable
@@ -50,6 +67,9 @@ public class RxJavaFragment extends Fragment implements View.OnClickListener {
         postView = (Button) view.findViewById(R.id.id_rx_post_button);
         fromView = (Button) view.findViewById(R.id.id_rx_from_button);
         createView = (Button) view.findViewById(R.id.id_rx_create_button);
+        flowableView = (Button) view.findViewById(R.id.id_rx_flowable_button);
+        completableView = (Button) view.findViewById(R.id.id_rx_completable_button);
+        maybeView = (Button) view.findViewById(R.id.id_rx_maybe_button);
         resultView = (TextView) view.findViewById(R.id.id_result_rx_view);
         initListener();
         return view;
@@ -60,6 +80,9 @@ public class RxJavaFragment extends Fragment implements View.OnClickListener {
         postView.setOnClickListener(this);
         fromView.setOnClickListener(this);
         createView.setOnClickListener(this);
+        flowableView.setOnClickListener(this);
+        completableView.setOnClickListener(this);
+        maybeView.setOnClickListener(this);
     }
 
     @Override
@@ -77,6 +100,15 @@ public class RxJavaFragment extends Fragment implements View.OnClickListener {
             case R.id.id_rx_create_button:
                 doCreate(1);
                 doConsumer();
+                break;
+            case R.id.id_rx_flowable_button:
+//                doJust("Hello");
+                doJust("hello", "world");
+            case R.id.id_rx_completable_button:
+                doCompletable();
+                break;
+            case R.id.id_rx_maybe_button:
+                doMaybe();
                 break;
         }
     }
@@ -202,7 +234,7 @@ public class RxJavaFragment extends Fragment implements View.OnClickListener {
 
                 e.onComplete();
 
-                Log.d(TAG, "Observable emit 4" + "\n" );
+                Log.d(TAG, "Observable emit 4" + "\n");
                 e.onNext(4);
             }
         }).subscribe(new Observer<Integer>() {
@@ -211,13 +243,13 @@ public class RxJavaFragment extends Fragment implements View.OnClickListener {
 
             @Override
             public void onSubscribe(@NonNull Disposable d) {
-                Log.d(TAG, "onSubscribe : " + d.isDisposed() + "\n" );
+                Log.d(TAG, "onSubscribe : " + d.isDisposed() + "\n");
                 mDisposable = d;
             }
 
             @Override
             public void onNext(@NonNull Integer integer) {
-                Log.d(TAG, "onNext : value : " + integer + "\n" );
+                Log.d(TAG, "onNext : value : " + integer + "\n");
                 i++;
                 if (i == 2) {
                     // 在RxJava 2.x 中，新增的Disposable可以做到切断的操作，让Observer观察者不再接收上游事件
@@ -228,12 +260,12 @@ public class RxJavaFragment extends Fragment implements View.OnClickListener {
 
             @Override
             public void onError(@NonNull Throwable e) {
-                Log.d(TAG, "onError : value : " + e.getMessage() + "\n" );
+                Log.d(TAG, "onError : value : " + e.getMessage() + "\n");
             }
 
             @Override
             public void onComplete() {
-                Log.d(TAG, "onComplete" + "\n" );
+                Log.d(TAG, "onComplete" + "\n");
             }
         });
 
@@ -293,23 +325,184 @@ public class RxJavaFragment extends Fragment implements View.OnClickListener {
         observable.subscribe(observer);
     }
 
-
     private void doConsumer() {
-        Observable.create(new ObservableOnSubscribe<Integer>() {
-            @Override
-            public void subscribe(@NonNull ObservableEmitter<Integer> e) throws Exception {
+        Observable
+                .create(new ObservableOnSubscribe<Integer>() {
+                    @Override
+                    public void subscribe(@NonNull ObservableEmitter<Integer> e) throws Exception {
 
-                Integer result = 100;//数据库操作
+                        Integer result = 100;//数据库操作
 
-                e.onNext(result);
-            }
-        }).observeOn(Schedulers.io()).subscribe(new Consumer<Integer>() {
+                        e.onNext(result);
+                    }
+                })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<Integer>() {
+                    @Override
+                    public void accept(Integer integer) throws Exception {
+                        Log.d(TAG, "accept，integer = " + integer);
+                    }
+                });
+    }
+
+    private void doJust(String s) {
+        Flowable.just(s).subscribe(new Consumer<String>() {
             @Override
-            public void accept(Integer integer) throws Exception {
-                Log.d(TAG, "accept，integer = " + integer);
+            public void accept(String s) throws Exception {
+                System.out.println(s);
             }
         });
     }
 
+    private void doJust(String t1, String t2) {
+        Flowable.just(t1, t2).subscribe(new Consumer<String>() {
+            @Override
+            public void accept(String s) throws Exception {
+                System.out.println(s);
+            }
+        });
+
+        Flowable.just(t1, t2).subscribe(new Subscriber<String>() {
+            @Override
+            public void onSubscribe(Subscription s) {
+
+            }
+
+            @Override
+            public void onNext(String s) {
+
+            }
+
+            @Override
+            public void onError(Throwable t) {
+
+            }
+
+            @Override
+            public void onComplete() {
+
+            }
+        });
+    }
+
+    private void doCompletable(String s) {
+        Disposable d = Completable.complete()
+                .delay(3, TimeUnit.SECONDS, Schedulers.io())
+                .subscribeWith(new DisposableCompletableObserver() {
+                    @Override
+                    public void onStart() {
+                        System.out.println("Started");
+                    }
+
+                    @Override
+                    public void onError(Throwable error) {
+                        error.printStackTrace();
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        System.out.println("Done!");
+                    }
+                });
+
+
+        d.dispose();
+
+    }
+
+    private void doCompletable() {
+        Completable.complete()
+                .delay(3, TimeUnit.SECONDS, Schedulers.io())
+                .subscribe(new CompletableObserver() {
+
+
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable error) {
+                        error.printStackTrace();
+                    }
+
+
+                    @Override
+                    public void onComplete() {
+                        System.out.println("Done!");
+                    }
+                });
+
+    }
+
+
+    private void doMaybe(String s) {
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Disposable d = Maybe.just("Hello World")
+                        .delay(3, TimeUnit.SECONDS, Schedulers.io())
+                        .subscribeWith(new DisposableMaybeObserver<String>() {
+                            @Override
+                            public void onStart() {
+                                System.out.println("Started");
+                            }
+
+                            @Override
+                            public void onSuccess(String value) {
+                                System.out.println("Success: " + value);
+                            }
+
+                            @Override
+                            public void onError(Throwable error) {
+                                error.printStackTrace();
+                            }
+
+                            @Override
+                            public void onComplete() {
+                                System.out.println("Done!");
+                            }
+                        });
+
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+                d.dispose();
+            }
+        }).start();
+
+    }
+
+    private void doMaybe() {
+        Maybe.just("Hello World")
+                .delay(3, TimeUnit.SECONDS, Schedulers.io())
+                .subscribe(new MaybeObserver<String>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                        System.out.println("Started");
+                    }
+
+                    @Override
+                    public void onSuccess(String value) {
+                        System.out.println("Success: " + value);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        e.printStackTrace();
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        System.out.println("Done!");
+                    }
+                });
+
+    }
 
 }

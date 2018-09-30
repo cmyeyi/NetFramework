@@ -38,6 +38,27 @@
             android:layout_marginBottom="15dp"
             android:text="do create" />
 
+        <Button
+            android:id="@+id/id_rx_flowable_button"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_marginBottom="15dp"
+            android:text="do just" />
+
+        <Button
+            android:id="@+id/id_rx_completable_button"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_marginBottom="15dp"
+            android:text="do completable" />
+
+        <Button
+            android:id="@+id/id_rx_maybe_button"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_marginBottom="15dp"
+            android:text="do maybe" />
+
         <TextView
             android:id="@+id/id_result_rx_view"
             android:layout_width="match_parent"

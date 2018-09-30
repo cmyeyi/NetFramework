@@ -51,10 +51,10 @@ public class FragmentMain extends BaseFragment implements View.OnClickListener {
 
     private void initViewPager() {
         List<FragmentPagerAdapter.TabInfo> list = new ArrayList<FragmentPagerAdapter.TabInfo>();
+        list.add(new FragmentPagerAdapter.TabInfo(RxJavaFragment.class, null, getString(R.string.main_title_text_3)));
         list.add(new FragmentPagerAdapter.TabInfo(VolleyFragment.class, null, getString(R.string.main_title_text_0)));
         list.add(new FragmentPagerAdapter.TabInfo(OkHttpFragment.class, null, getString(R.string.main_title_text_1)));
         list.add(new FragmentPagerAdapter.TabInfo(RetrofitFragment.class, null, getString(R.string.main_title_text_2)));
-        list.add(new FragmentPagerAdapter.TabInfo(RxJavaFragment.class, null, getString(R.string.main_title_text_3)));
         FragmentPagerAdapter adapter = new FragmentPagerAdapter(getActivity(), getChildFragmentManager(), list);
         mViewPager.setOffscreenPageLimit(0);
         mViewPager.setAdapter(adapter);
